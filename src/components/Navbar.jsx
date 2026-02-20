@@ -2,17 +2,25 @@ import { Link, useLocation } from 'react-router-dom';
 
 function LogoIcon() {
   return (
-    <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M20 2L6 10v20l14 8 14-8V10L20 2z" fill="#1E293B" opacity="0.05" />
-      <path d="M20 4L8 11v18l12 7 12-7V11L20 4z" stroke="#1E293B" strokeWidth="1.5" fill="none" />
-      <circle cx="14" cy="16" r="2.5" fill="#F97316" />
-      <circle cx="20" cy="12" r="2.5" fill="#FBBF24" />
-      <circle cx="26" cy="16" r="2.5" fill="#34D399" />
-      <circle cx="20" cy="22" r="2.5" fill="#60A5FA" />
-      <line x1="14" y1="16" x2="20" y2="12" stroke="#F97316" strokeWidth="1.2" />
-      <line x1="20" y1="12" x2="26" y2="16" stroke="#FBBF24" strokeWidth="1.2" />
-      <line x1="14" y1="16" x2="20" y2="22" stroke="#60A5FA" strokeWidth="1.2" />
-      <line x1="26" y1="16" x2="20" y2="22" stroke="#34D399" strokeWidth="1.2" />
+    <svg width="36" height="32" viewBox="0 0 52 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Hexagon */}
+      <path
+        d="M18 4L6 11v18l12 7 12-7V11L18 4z"
+        stroke="#1E293B"
+        strokeWidth="2"
+        fill="none"
+      />
+      {/* Orange I bar */}
+      <rect x="15.5" y="13" width="5" height="14" rx="1" fill="#F97316" />
+      {/* Circuit lines from right side of hexagon */}
+      <line x1="30" y1="15" x2="38" y2="11" stroke="#1E293B" strokeWidth="1.5" />
+      <line x1="38" y1="11" x2="46" y2="11" stroke="#1E293B" strokeWidth="1.5" />
+      <circle cx="46" cy="11" r="2" fill="#1E293B" />
+      <line x1="30" y1="20" x2="38" y2="20" stroke="#1E293B" strokeWidth="1.5" />
+      <circle cx="38" cy="20" r="2" fill="#1E293B" />
+      <line x1="30" y1="25" x2="38" y2="29" stroke="#1E293B" strokeWidth="1.5" />
+      <line x1="38" y1="29" x2="46" y2="29" stroke="#1E293B" strokeWidth="1.5" />
+      <circle cx="46" cy="29" r="2" fill="#1E293B" />
     </svg>
   );
 }
@@ -25,7 +33,9 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 text-xl font-bold tracking-tight text-dark">
           <LogoIcon />
-          <span>INFNOVA</span>
+          <span className="text-dark">
+            INF<span className="text-primary">.</span>NOVA
+          </span>
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
