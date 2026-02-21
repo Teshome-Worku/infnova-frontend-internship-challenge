@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/image.png';
-
 export default function Navbar() {
   const { pathname } = useLocation();
   const isDetailPage = pathname.startsWith('/courses/');
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const menuToggle=()=>{setMenuOpen((prev) => !prev)}
   return (
     <nav className={`sticky top-0 z-50 bg-white border-b border-gray-100 ${isDetailPage ? 'shadow-sm' : ''}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center" onClick={() => setMenuOpen(false)}>
+        <Link to="/" className="flex items-center" onClick={menuToggle}>
           <img src={logo} alt="INFNOVA" className="h-14" />
         </Link>
 
@@ -23,12 +22,18 @@ export default function Navbar() {
           >
             Courses
           </Link>
-          <a href="#" className="text-sm font-medium text-gray-500 hover:text-dark transition-colors">
+          <Link 
+            to="/about" 
+            className={`text-sm font-medium transition-colors ${
+              pathname === '/about' ? 'text-dark' : 'text-gray-500 hover:text-dark'
+            }`}>
             About
-          </a>
-          <a href="#" className="text-sm font-medium text-gray-500 hover:text-dark transition-colors">
+          </Link>
+          <Link to="/contact" className={`text-sm font-medium transition-colors ${
+              pathname === '/contact' ? 'text-dark' : 'text-gray-500 hover:text-dark'
+            }`}>
             Contact
-          </a>
+          </Link>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-4">
@@ -43,9 +48,9 @@ export default function Navbar() {
           </Link>
 
           <button
-            className="md:hidden text-gray-600 p-1 ml-1"
+            className="md:hidden p-1 ml-1 hover:cursor-pointer text-dark transition-colors"
             aria-label="Toggle menu"
-            onClick={() => setMenuOpen((prev) => !prev)}
+            onClick={menuToggle}
           >
           {menuOpen ? (
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -62,23 +67,29 @@ export default function Navbar() {
 
       {/* Mobile menu — nav links only */}
       {menuOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white">
+        <div className="md:hidden border-t border-gray-100 bg-white flex items-center  justify-center">
           <div className="px-4 py-3 space-y-1">
             <Link
               to="/"
-              onClick={() => setMenuOpen(false)}
+              onClick={menuToggle}
               className={`block text-sm font-medium py-2 ${
                 pathname === '/' ? 'text-primary' : 'text-gray-600'
               }`}
             >
               Courses
             </Link>
-            <a href="#" className="block text-sm font-medium text-gray-600 py-2">
+            <Link
+              to="/about"
+              onClick={menuToggle}
+              className="block text-sm font-medium text-gray-600 py-2">
               About
-            </a>
-            <a href="#" className="block text-sm font-medium text-gray-600 py-2">
+            </Link>
+            <Link
+              to="/contact"
+              onClick={menuToggle}
+              className="block text-sm font-medium text-gray-600 py-2">
               Contact
-            </a>
+            </Link>
           </div>
         </div>
       )}
