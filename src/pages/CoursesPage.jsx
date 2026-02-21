@@ -23,7 +23,7 @@ export default function CoursesPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-primary to-primary-dark text-white">
+      <section className="bg-linear-to-br from-primary to-primary-dark text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight mb-3">
             Explore Our Courses
@@ -52,8 +52,8 @@ export default function CoursesPage() {
               />
             </div>
             <div className="flex gap-3">
-              <div className="px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-400 min-w-[120px]" />
-              <div className="px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-400 min-w-[120px] hidden sm:block" />
+              <div className="px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-400 min-w-30" />
+              <div className="px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-400 min-w-30 hidden sm:block" />
             </div>
           </div>
         </div>
