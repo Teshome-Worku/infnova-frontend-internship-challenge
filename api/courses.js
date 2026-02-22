@@ -30,6 +30,7 @@ export default async function handler(req, res) {
                     const data = JSON.parse(text);
                     res.setHeader('Content-Type', 'application/json');
                     res.setHeader('Access-Control-Allow-Origin', '*');
+                    res.setHeader('x-upstream-target', target);
                     return res.status(r.status).json(data);
                 } catch (err) {
                     console.error('proxy /courses invalid-json', target, err);
@@ -40,6 +41,7 @@ export default async function handler(req, res) {
             // Upstream returned non-JSON (likely HTML). Wrap into JSON to avoid client parse errors.
             res.setHeader('Content-Type', 'application/json');
             res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('x-upstream-target', target);
             return res.status(r.status).json({
                 error: 'non-json-response',
                 upstream: target,
