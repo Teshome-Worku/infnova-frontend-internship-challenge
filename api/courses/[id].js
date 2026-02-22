@@ -33,7 +33,7 @@ export default async function handler(req, res) {
                     return res.status(r.status).json(data);
                 } catch (err) {
                     console.error('proxy /courses invalid-json', target, err);
-                    // fallthrough to wrapped JSON
+                    // fall through to return wrapped JSON
                 }
             }
 
@@ -55,7 +55,21 @@ export default async function handler(req, res) {
 
     return res.status(502).json({ error: 'Bad gateway' });
 }
-res.setHeader('Content-Type', contentType || 'text/plain');
+
+
+
+// Upstream returned non-JSON (likely HTML). Wrap into JSON to avoid client parse errors.
+res.setHeader('Content-Type', 'application/json');
 res.setHeader('Access-Control-Allow-Origin', '*');
-return res.status(r.status).send(text);
-// return res.status(502).json({ error: 'Bad gateway' });
+return res.status(r.status).json({
+    error: 'non-json-response',
+    upstream: target,
+    status: r.status,
+    contentType,
+    bodyPreview: text ? text.slice(0, 2000) : null,
+});
+
+
+
+
+return res.status(502).json({ error: 'Bad gateway' });
