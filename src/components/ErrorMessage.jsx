@@ -1,4 +1,21 @@
 export default function ErrorMessage({ message, onRetry }) {
+  // Shorten and user-friendly message for common upstream/parse errors
+  const raw = message || '';
+  const lower = raw.toLowerCase();
+  let display = raw;
+
+  if (
+    lower.includes('non-json') ||
+    lower.includes('upstream returned non-json') ||
+    lower.includes('<!doctype') ||
+    lower.includes('invalid json') ||
+    lower.includes('failed to fetch course (404)') ||
+    lower.includes('failed to fetch course (400)') ||
+    lower.includes('failed to fetch course (500)')
+  ) {
+    display = 'Course not found or unavailable.';
+  }
+
   return (
     <div className="flex flex-col items-center justify-center py-24 gap-4 text-center px-4">
       <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center">
@@ -7,7 +24,7 @@ export default function ErrorMessage({ message, onRetry }) {
         </svg>
       </div>
       <h3 className="text-lg font-semibold text-dark">Something went wrong</h3>
-      <p className="text-gray-500 text-sm max-w-md">{message}</p>
+      <p className="text-gray-500 text-sm max-w-md">{display}</p>
       {onRetry && (
         <button
           onClick={onRetry}
