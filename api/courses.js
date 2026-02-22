@@ -5,37 +5,46 @@ export default async function handler(req, res) {
     }
 
     const REMOTE = process.env.REMOTE_API_BASE || 'https://infnova-course-api.vercel.app';
-    // preserve any query string from the incoming request when proxying
     const search = req.url && req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
-    const target = `${REMOTE}/courses${search}`;
-    console.log('proxy /api/courses ->', target);
 
-    try {
-        const r = await fetch(target, { method: 'GET', headers: { Accept: 'application/json' } });
-        const contentType = r.headers.get('content-type') || '';
-        const text = await r.text();
+    const candidates = [
+        `${REMOTE}/courses${search}`,
+        `${REMOTE}/api/courses${search}`,
+    ];
 
-        // Log non-OK responses for easier debugging
-        if (!r.ok) console.error('proxy /courses non-ok', r.status, text.slice(0, 200));
+    for (const target of candidates) {
+        console.log('proxy /api/courses ->', target);
+        try {
+            const r = await fetch(target, { method: 'GET', headers: { Accept: 'application/json' } });
+            const contentType = r.headers.get('content-type') || '';
+            const text = await r.text();
 
-        // If response is JSON, forward as JSON so client res.json() works
-        if (contentType.includes('application/json')) {
-            try {
-                const data = JSON.parse(text);
-                res.setHeader('Content-Type', 'application/json');
-                return res.status(r.status).json(data);
-            } catch (err) {
-                console.error('proxy /courses invalid-json', err, text.slice(0, 200));
-                // fallthrough to return raw text
+            if (!r.ok) {
+                console.error('proxy /courses non-ok', target, r.status);
+                // try next candidate
+                continue;
             }
-        }
 
-        // Fallback: return raw text with original content-type
-        res.setHeader('Content-Type', contentType || 'text/plain');
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        return res.status(r.status).send(text);
-    } catch (err) {
-        console.error('proxy /courses error', err);
-        return res.status(502).json({ error: 'Bad gateway' });
+            if (contentType.includes('application/json')) {
+                try {
+                    const data = JSON.parse(text);
+                    res.setHeader('Content-Type', 'application/json');
+                    res.setHeader('Access-Control-Allow-Origin', '*');
+                    return res.status(r.status).json(data);
+                } catch (err) {
+                    console.error('proxy /courses invalid-json', target, err);
+                    // fall through to return raw text
+                }
+            }
+
+            res.setHeader('Content-Type', contentType || 'text/plain');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            return res.status(r.status).send(text);
+        } catch (err) {
+            console.error('proxy /courses error', target, err);
+            // try next candidate
+        }
     }
+
+    return res.status(502).json({ error: 'Bad gateway' });
 }
