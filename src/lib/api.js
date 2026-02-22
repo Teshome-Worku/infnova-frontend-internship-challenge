@@ -30,7 +30,19 @@ export async function fetchCourses(options) {
 }
 
 export async function fetchCourseById(id, options) {
-    const res = await fetch(`${BASE_URL}/courses/${id}`, options);
-    if (!res.ok) throw new Error(`Failed to fetch course (${res.status})`);
-    return parseJsonSafe(res);
+    try {
+        const res = await fetch(`${BASE_URL}/courses/${id}`, options);
+        if (!res.ok) throw new Error(`Failed to fetch course (${res.status})`);
+        return await parseJsonSafe(res);
+    } catch (err) {
+        // Fallback: try fetching the courses list and find the item locally.
+        try {
+            const list = await fetchCourses(options);
+            const found = list && Array.isArray(list) ? list.find(c => String(c.id) === String(id) || String(c._id) === String(id)) : null;
+            if (found) return found;
+        } catch (e) {
+            // ignore and rethrow original error below
+        }
+        throw err;
+    }
 }
